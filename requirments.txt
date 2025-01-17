@@ -1,6 +1,0 @@
-python==3.9.10
-streamlit
-numpy
-matplotlib
-plotly
-streamlit-drawable-canvas
