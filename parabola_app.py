@@ -46,30 +46,66 @@ def calculate_parabola(a, b, c):
 # Get calculated values
 x, y, vertex, focus, directrix_y = calculate_parabola(a, b, c)
 
-# 🎨 Plot 2D Parabola with Vertex, Focus, and Directrix
-fig, ax = plt.subplots(figsize=(8, 6))
-ax.plot(x, y, label=f'y = {a}x² + {b}x + {c}', color='b')
-ax.scatter(*vertex, color='red', zorder=5, label=f'Vertex ({vertex[0]:.2f}, {vertex[1]:.2f})')
-ax.scatter(*focus, color='green', zorder=5, label=f'Focus ({focus[0]:.2f}, {focus[1]:.2f})')
-ax.axhline(directrix_y, color='orange', linestyle='dashed', label=f'Directrix y={directrix_y:.2f}')
-ax.axhline(0, color='black', linewidth=1)
-ax.axvline(0, color='black', linewidth=1)
-ax.legend()
-ax.grid(True)
-st.pyplot(fig)
+# ** Layout Structure **
+col1, col2 = st.columns([1, 2])  # Columns for UI organization
+
+# Real-time Equation Feedback
+with col1:
+    st.subheader("Real-time Equation Feedback")
+    equation_preview = f"y = {a}x² + {b}x + {c}"
+    st.write(f"**Current Equation:** {equation_preview}")
+
+# Parabola Properties
+with col1:
+    st.subheader("Parabola Properties")
+    st.write(f"**Vertex:** ({vertex[0]:.2f}, {vertex[1]:.2f})")
+    st.write(f"**Focus:** ({focus[0]:.2f}, {focus[1]:.2f})")
+    st.write(f"**Directrix:** y = {directrix_y:.2f}")
+    st.write(f"**Axis of Symmetry:** x = {vertex[0]:.2f}")
+
+# 🎨 2D Interactive Parabola Plot with Plotly
+with col2:
+    st.subheader("📊 2D Interactive Parabola")
+    fig = go.Figure()
+
+    # Adding the parabola trace
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name=f'y = {a}x² + {b}x + {c}', line=dict(color='blue')))
+    
+    # Adding vertex and focus points
+    fig.add_trace(go.Scatter(x=[vertex[0]], y=[vertex[1]], mode='markers', name=f'Vertex ({vertex[0]:.2f}, {vertex[1]:.2f})', marker=dict(color='red')))
+    fig.add_trace(go.Scatter(x=[focus[0]], y=[focus[1]], mode='markers', name=f'Focus ({focus[0]:.2f}, {focus[1]:.2f})', marker=dict(color='green')))
+
+    # Directrix line
+    fig.add_trace(go.Scatter(x=x, y=[directrix_y]*len(x), mode='lines', name=f'Directrix y={directrix_y:.2f}', line=dict(color='orange', dash='dash')))
+
+    # Axis of symmetry
+    fig.add_trace(go.Scatter(x=[vertex[0]]*2, y=[min(y), max(y)], mode='lines', name=f'Axis of Symmetry x={vertex[0]:.2f}', line=dict(color='purple', dash='dot')))
+
+    # Updating layout
+    fig.update_layout(
+        title=f"Interactive Parabola: y = {a}x² + {b}x + {c}",
+        xaxis_title="X-axis",
+        yaxis_title="Y-axis",
+        showlegend=True,
+        template="plotly_dark"
+    )
+
+    # Display the plot
+    st.plotly_chart(fig, use_container_width=True)
 
 # 🌀 3D Paraboloid Visualization
-st.subheader("🌀 3D Paraboloid Visualization")
-x_vals = np.linspace(-5, 5, 50)
-y_vals = np.linspace(-5, 5, 50)
-X, Y = np.meshgrid(x_vals, y_vals)
-Z = a * (X**2 + Y**2)
+with col2:
+    st.subheader("🌀 3D Paraboloid Visualization")
+    x_vals = np.linspace(-5, 5, 50)
+    y_vals = np.linspace(-5, 5, 50)
+    X, Y = np.meshgrid(x_vals, y_vals)
+    Z = a * (X**2 + Y**2)
 
-fig_3d = go.Figure(data=[go.Surface(z=Z, x=X, y=Y, colorscale="Viridis")])
-fig_3d.update_layout(title="3D Paraboloid", scene=dict(xaxis_title="X-axis", yaxis_title="Y-axis", zaxis_title="Z-axis"))
-st.plotly_chart(fig_3d, use_container_width=True)
+    fig_3d = go.Figure(data=[go.Surface(z=Z, x=X, y=Y, colorscale="Viridis")])
+    fig_3d.update_layout(title="3D Paraboloid", scene=dict(xaxis_title="X-axis", yaxis_title="Y-axis", zaxis_title="Z-axis"))
+    st.plotly_chart(fig_3d, use_container_width=True)
 
-# 🎨 Allow users to draw their own parabola
+# 🎨 Interactive Drawing Mode
 st.subheader("✍️ Draw Your Own Parabola")
 draw_mode = st.checkbox("Enable Drawing Mode ✏️")
 if draw_mode:
@@ -85,4 +121,26 @@ if draw_mode:
         key="canvas",
     )
 
-st.write("Developed by Om Danadge for maths project  🚀")
+# Additional Interactions: Sliders for `a`, `b`, and `c`
+with st.sidebar:
+    st.subheader("Adjust Coefficients")
+    a = st.slider('Coefficient a', -5.0, 5.0, 1.0)
+    b = st.slider('Coefficient b', -5.0, 5.0, 0.0)
+    c = st.slider('Coefficient c', -5.0, 5.0, 0.0)
+
+# Recalculate and update the values based on new sliders
+x, y, vertex, focus, directrix_y = calculate_parabola(a, b, c)
+
+# ** Updated Equation Feedback and Properties **
+with col1:
+    st.subheader("Real-time Equation Feedback")
+    equation_preview = f"y = {a}x² + {b}x + {c}"
+    st.write(f"**Current Equation:** {equation_preview}")
+
+    st.subheader("Parabola Properties")
+    st.write(f"**Vertex:** ({vertex[0]:.2f}, {vertex[1]:.2f})")
+    st.write(f"**Focus:** ({focus[0]:.2f}, {focus[1]:.2f})")
+    st.write(f"**Directrix:** y = {directrix_y:.2f}")
+    st.write(f"**Axis of Symmetry:** x = {vertex[0]:.2f}")
+
+st.write("Developed by Om Dandage for a math project 🚀")
