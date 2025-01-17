@@ -1,5 +1,5 @@
-streamlit==1.10.0
-numpy==1.21.2
+streamlit==1.10.0  # or use 1.41.1 if you prefer
+numpy==1.23.5  # Choose a version that is compatible with Python 3.12
 matplotlib==3.4.3
 plotly==5.3.1
-streamlit-drawable-canvas==0.6.2
+streamlit-drawable-canvas==0.5.2  # Compatible version for Python 3.12
