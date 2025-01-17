@@ -26,15 +26,22 @@ def plot_2d_parabola(a, b, c):
     directrix_y = vertex_y - (1 / (4 * a))
     
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Parabola', line=dict(color='cyan')))
-    fig.add_trace(go.Scatter(x=[focus_x], y=[focus_y], mode='markers', name='Focus', marker=dict(color='red', size=10)))
-    fig.add_trace(go.Scatter(x=[-1000, 1000], y=[directrix_y, directrix_y], mode='lines', name='Directrix', line=dict(color='yellow', dash='dash')))
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Parabola', line=dict(color='deepskyblue', width=3)))
+    fig.add_trace(go.Scatter(x=[focus_x], y=[focus_y], mode='markers', name='Focus', marker=dict(color='red', size=12, symbol='x')))
+    fig.add_trace(go.Scatter(x=[-1000, 1000], y=[directrix_y, directrix_y], mode='lines', name='Directrix', line=dict(color='gold', dash='dash', width=2)))
     
-    # Add grid lines (boxes)
-    fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='gray', zeroline=True, zerolinewidth=2, zerolinecolor='white')
-    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='gray', zeroline=True, zerolinewidth=2, zerolinecolor='white')
+    # Enhance grid lines (boxes) for better visibility
+    fig.update_xaxes(showgrid=True, gridwidth=2, gridcolor='white', zeroline=True, zerolinewidth=3, zerolinecolor='red')
+    fig.update_yaxes(showgrid=True, gridwidth=2, gridcolor='white', zeroline=True, zerolinewidth=3, zerolinecolor='red')
     
-    fig.update_layout(title="2D Parabola", xaxis_title="X-Axis", yaxis_title="Y-Axis", template="plotly_dark")
+    fig.update_layout(
+        title="2D Parabola", 
+        xaxis_title="X-Axis", 
+        yaxis_title="Y-Axis", 
+        template="plotly_dark", 
+        height=600, width=800, 
+        margin=dict(l=20, r=20, t=50, b=20)
+    )
     return fig, focus_x, focus_y, directrix_y
 
 # 2D Parabola Section
@@ -47,7 +54,7 @@ if section == "📈 2D Parabola":
         c = st.slider("Constant Term (c)", -1000.0, 1000.0, 0.0)
     with col2:
         fig, focus_x, focus_y, directrix_y = plot_2d_parabola(a, b, c)
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, use_container_width=True)
         st.markdown(f"**Focus:** ({focus_x:.2f}, {focus_y:.2f})")
         st.markdown(f"**Directrix:** y = {directrix_y:.2f}")
 
