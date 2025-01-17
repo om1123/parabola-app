@@ -1,4 +1,10 @@
 import os
+import subprocess
+
+# Force install matplotlib
+subprocess.check_call([os.sys.executable, "-m", "pip", "install", "matplotlib"])
+
+import os
 os.system('pip install matplotlib')
 import streamlit as st
 import numpy as np
