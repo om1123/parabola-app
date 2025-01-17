@@ -85,4 +85,4 @@ if draw_mode:
         key="canvas",
     )
 
-st.write("Developed with ❤️ using Streamlit 🚀")
+st.write("Developed by Om Danadge for maths project  🚀")
