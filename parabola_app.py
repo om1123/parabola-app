@@ -1,8 +1,6 @@
 import streamlit as st
 import numpy as np
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-from streamlit_drawable_canvas import st_canvas
 import re
 
 # Streamlit App Title
@@ -32,7 +30,7 @@ a, b, c = parse_equation(equation_input)
 
 # Function to calculate parabola
 def calculate_parabola(a, b, c):
-    x = np.linspace(-10, 10, 400)
+    x = np.linspace(-15, 15, 400)  # Extended range for larger coefficient values
     y = a * x**2 + b * x + c
     
     vertex_x = -b / (2 * a)
@@ -43,29 +41,56 @@ def calculate_parabola(a, b, c):
     
     return x, y, (vertex_x, vertex_y), (focus_x, focus_y), directrix_y
 
-# Get calculated values
-x, y, vertex, focus, directrix_y = calculate_parabola(a, b, c)
+# Custom CSS for styling and borders
+st.markdown("""
+    <style>
+        .section-block {
+            border: 2px solid #4CAF50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .section-title {
+            font-size: 1.5em;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .code-block {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+""", unsafe_allow_html=True)
 
 # ** Layout Structure **
 col1, col2 = st.columns([1, 2])  # Columns for UI organization
 
-# Real-time Equation Feedback
+# Equation and Parabola Properties Block
 with col1:
+    st.markdown('<div class="section-block">', unsafe_allow_html=True)
     st.subheader("Real-time Equation Feedback")
     equation_preview = f"y = {a}x² + {b}x + {c}"
     st.write(f"**Current Equation:** {equation_preview}")
 
-# Parabola Properties
-with col1:
     st.subheader("Parabola Properties")
+    x, y, vertex, focus, directrix_y = calculate_parabola(a, b, c)  # Recalculate parabola with updated coefficients
     st.write(f"**Vertex:** ({vertex[0]:.2f}, {vertex[1]:.2f})")
     st.write(f"**Focus:** ({focus[0]:.2f}, {focus[1]:.2f})")
     st.write(f"**Directrix:** y = {directrix_y:.2f}")
     st.write(f"**Axis of Symmetry:** x = {vertex[0]:.2f}")
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# 🎨 2D Interactive Parabola Plot with Plotly
+# 2D Interactive Plot Block
 with col2:
+    st.markdown('<div class="section-block">', unsafe_allow_html=True)
     st.subheader("📊 2D Interactive Parabola")
+    
+    # Get updated values of x, y, vertex, focus, and directrix_y after the user adjusts the coefficients
+    x, y, vertex, focus, directrix_y = calculate_parabola(a, b, c)
+
     fig = go.Figure()
 
     # Adding the parabola trace
@@ -81,58 +106,54 @@ with col2:
     # Axis of symmetry
     fig.add_trace(go.Scatter(x=[vertex[0]]*2, y=[min(y), max(y)], mode='lines', name=f'Axis of Symmetry x={vertex[0]:.2f}', line=dict(color='purple', dash='dot')))
 
-    # Updating layout
+    # Updating layout to allow zoom/pan and wider ranges
     fig.update_layout(
         title=f"Interactive Parabola: y = {a}x² + {b}x + {c}",
         xaxis_title="X-axis",
         yaxis_title="Y-axis",
         showlegend=True,
-        template="plotly_dark"
+        template="plotly_dark",
+        autosize=True,  # Allow auto scaling of the graph
+        dragmode="pan",  # Allow pan functionality
+        hovermode="closest"
     )
 
     # Display the plot
     st.plotly_chart(fig, use_container_width=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# 🌀 3D Paraboloid Visualization
-with col2:
-    st.subheader("🌀 3D Paraboloid Visualization")
-    x_vals = np.linspace(-5, 5, 50)
-    y_vals = np.linspace(-5, 5, 50)
-    X, Y = np.meshgrid(x_vals, y_vals)
-    Z = a * (X**2 + Y**2)
-
-    fig_3d = go.Figure(data=[go.Surface(z=Z, x=X, y=Y, colorscale="Viridis")])
-    fig_3d.update_layout(title="3D Paraboloid", scene=dict(xaxis_title="X-axis", yaxis_title="Y-axis", zaxis_title="Z-axis"))
-    st.plotly_chart(fig_3d, use_container_width=True)
-
-# 🎨 Interactive Drawing Mode
-st.subheader("✍️ Draw Your Own Parabola")
-draw_mode = st.checkbox("Enable Drawing Mode ✏️")
-if draw_mode:
-    st.write("Click and drag on the canvas to draw your own parabola!")
-    canvas_result = st_canvas(
-        fill_color="rgba(255, 165, 0, 0.3)",
-        stroke_width=3,
-        stroke_color="black",
-        background_color="white",
-        height=300,
-        width=600,
-        drawing_mode="freedraw",
-        key="canvas",
-    )
+# Interactive Drawing Mode Block
+with col1:
+    st.markdown('<div class="section-block">', unsafe_allow_html=True)
+    st.subheader("✍️ Draw Your Own Parabola")
+    draw_mode = st.checkbox("Enable Drawing Mode ✏️")
+    if draw_mode:
+        st.write("Click and drag on the canvas to draw your own parabola!")
+        canvas_result = st_canvas(
+            fill_color="rgba(255, 165, 0, 0.3)",
+            stroke_width=3,
+            stroke_color="black",
+            background_color="white",
+            height=300,
+            width=600,
+            drawing_mode="freedraw",
+            key="canvas",
+        )
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Additional Interactions: Sliders for `a`, `b`, and `c`
 with st.sidebar:
     st.subheader("Adjust Coefficients")
-    a = st.slider('Coefficient a', -5.0, 5.0, 1.0)
-    b = st.slider('Coefficient b', -5.0, 5.0, 0.0)
-    c = st.slider('Coefficient c', -5.0, 5.0, 0.0)
+    a = st.slider('Coefficient a', -1000.0, 1000.0, 1.0, step=0.01)  # Increased range for coefficient a
+    b = st.slider('Coefficient b', -1000.0, 1000.0, 0.0, step=0.01)  # Increased range for coefficient b
+    c = st.slider('Coefficient c', -1000.0, 1000.0, 0.0, step=0.01)  # Increased range for coefficient c
 
 # Recalculate and update the values based on new sliders
 x, y, vertex, focus, directrix_y = calculate_parabola(a, b, c)
 
 # ** Updated Equation Feedback and Properties **
 with col1:
+    st.markdown('<div class="section-block">', unsafe_allow_html=True)
     st.subheader("Real-time Equation Feedback")
     equation_preview = f"y = {a}x² + {b}x + {c}"
     st.write(f"**Current Equation:** {equation_preview}")
@@ -142,5 +163,6 @@ with col1:
     st.write(f"**Focus:** ({focus[0]:.2f}, {focus[1]:.2f})")
     st.write(f"**Directrix:** y = {directrix_y:.2f}")
     st.write(f"**Axis of Symmetry:** x = {vertex[0]:.2f}")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 st.write("Developed by Om Dandage for a math project 🚀")
