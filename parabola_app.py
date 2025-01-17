@@ -1,16 +1,9 @@
-import os
-import subprocess
-
-# Force install matplotlib
-#subprocess.check_call([os.sys.executable, "-m", "pip", "install", "matplotlib"])
-
-import os
-os.system('pip install matplotlib')
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from streamlit_drawable_canvas import st_canvas
+import re
 
 # Streamlit App Title
 st.set_page_config(page_title="Interactive Parabola Web App", layout="wide")
@@ -19,10 +12,23 @@ st.title("🎯 Interactive Parabola Web App")
 # Sidebar Controls
 st.sidebar.header("🎨 Customize Your Parabola")
 
-# Sliders for parabola equation: y = ax² + bx + c
-a = st.sidebar.slider("Curvature (a)", -5.0, 5.0, 1.0, step=0.1)
-b = st.sidebar.slider("Linear Shift (b)", -10.0, 10.0, 0.0, step=0.1)
-c = st.sidebar.slider("Vertical Shift (c)", -10.0, 10.0, 0.0, step=0.1)
+# Option for Custom Equation Input
+equation_input = st.sidebar.text_input("Enter your Parabola Equation", value="y = x²")
+
+# Function to parse and extract coefficients from equation
+def parse_equation(equation):
+    match = re.match(r"y = ([-+]?\d*\.?\d*)x\²\s*([+-]?\d*\.?\d*)x\s*([+-]?\d*\.?\d*)", equation.replace(" ", ""))
+    if match:
+        a = float(match.group(1)) if match.group(1) != '' else 1.0
+        b = float(match.group(2)) if match.group(2) != '' else 0.0
+        c = float(match.group(3)) if match.group(3) != '' else 0.0
+    else:
+        # Default to y = x² if equation is invalid
+        a, b, c = 1.0, 0.0, 0.0
+    return a, b, c
+
+# Parse the equation
+a, b, c = parse_equation(equation_input)
 
 # Function to calculate parabola
 def calculate_parabola(a, b, c):
