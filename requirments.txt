@@ -1,5 +1,6 @@
-streamlit==1.10.0
-numpy==1.21.2
-matplotlib==3.4.3
-plotly==5.3.1
-streamlit-drawable-canvas==0.6.2
+python==3.9.10
+streamlit
+numpy
+matplotlib
+plotly
+streamlit-drawable-canvas
