@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+import re
 
 # App Configuration
 st.set_page_config(page_title="Parabola Explorer", layout="wide")
@@ -49,15 +50,29 @@ if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
     col1, col2 = st.columns([1, 2])
     with col1:
-        a = st.slider("Quadratic Coefficient (a)", -1000.0, 1000.0, 1.0)
-        b = st.slider("Linear Coefficient (b)", -1000.0, 1000.0, 0.0)
-        c = st.slider("Constant Term (c)", -1000.0, 1000.0, 0.0)
+        equation = st.text_input("Enter quadratic equation (ax^2 + bx + c)", "x^2")
+        match = re.match(r"([-+]?[0-9]*\.?[0-9]*)?x\^2\s*([-+]?[0-9]*\.?[0-9]*)?x?\s*([-+]?[0-9]*\.?[0-9]*)?", equation.replace(" ", ""))
+        
+        if match:
+            a = float(match.group(1) or 1)
+            b = float(match.group(2) or 0)
+            c = float(match.group(3) or 0)
+        else:
+            st.error("Invalid equation format! Use ax^2 + bx + c")
+            a, b, c = 1, 0, 0
+        
+        st.markdown(f"**Parsed Coefficients:** a = {a}, b = {b}, c = {c}")
+    
     with col2:
         fig, focus_x, focus_y, directrix_y = plot_2d_parabola(a, b, c)
         st.plotly_chart(fig, use_container_width=True)
+    
+    with col1:
         st.markdown(f"**Focus:** ({focus_x:.2f}, {focus_y:.2f})")
         st.markdown(f"**Directrix:** y = {directrix_y:.2f}")
 
 # More sections will be added for 3D, Sketch Mode, Tangents, Motion, etc.
 
 st.sidebar.info("More features coming soon! 🚀")
+
+
