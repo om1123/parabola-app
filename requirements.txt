@@ -3,3 +3,4 @@ numpy==1.23.5  # Choose a version that is compatible with Python 3.12
 matplotlib==3.4.3
 plotly==5.3.1
 streamlit-drawable-canvas==0.5.2  # Compatible version for Python 3.12
+pip install --upgrade pip
