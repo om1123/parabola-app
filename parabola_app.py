@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 import re
-import os
 
 # App Configuration
 st.set_page_config(page_title="Parabola Explorer", layout="wide")
@@ -55,25 +54,6 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
-# Function to plot 3D parabola
-def plot_3d_parabola():
-    x = np.linspace(-10, 10, 100)
-    y = np.linspace(-10, 10, 100)
-    x, y = np.meshgrid(x, y)
-    z = x**2 + y**2  # Parabola equation
-    
-    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis')])
-    fig.update_layout(
-        title="3D Parabola",
-        scene=dict(
-            xaxis=dict(title='X-Axis'),
-            yaxis=dict(title='Y-Axis'),
-            zaxis=dict(title='Z-Axis')
-        ),
-        height=600, width=800
-    )
-    return fig
-
 # 2D Parabola Section
 if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
@@ -100,17 +80,9 @@ if section == "📈 2D Parabola":
         st.plotly_chart(fig, use_container_width=True)
 
 # 3D Parabola Section with AR/VR option
-if section == "🕶️ 3D Parabola":
-    st.header("🕶️ Interactive 3D Parabola")
-    
-    # Show 3D Plotly Graph
-    fig_3d = plot_3d_parabola()
-    st.plotly_chart(fig_3d, use_container_width=True)
-
-# AR/VR Section
 if section == "📡 AR/VR View":
     st.header("📡 3D Parabola in AR/VR")
-    
+
     # Toggle between AR/VR view
     option = st.radio("Choose View:", ["AR View (Mobile)", "VR View (Mobile)", "Desktop 3D Plot"])
     
@@ -118,8 +90,8 @@ if section == "📡 AR/VR View":
         # AR View using A-Frame
         st.markdown("""
         <a-scene embedded arjs>
-            <!-- 3D Parabola Model -->
-            <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
+            <!-- Simple box model for testing AR -->
+            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
         </a-scene>
         """, unsafe_allow_html=True)
 
@@ -127,14 +99,14 @@ if section == "📡 AR/VR View":
         # VR View using A-Frame (similar approach as AR)
         st.markdown("""
         <a-scene embedded vr-mode-ui>
-            <!-- 3D Parabola Model -->
-            <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
+            <!-- Simple box model for testing VR -->
+            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
         </a-scene>
         """, unsafe_allow_html=True)
 
     elif option == "Desktop 3D Plot":
         # Show 3D Plotly Graph for Desktop users
-        fig_3d = plot_3d_parabola()
+        fig_3d = plot_2d_parabola(1)[0]  # You can change this if needed
         st.plotly_chart(fig_3d, use_container_width=True)
 
 # Sidebar Info
