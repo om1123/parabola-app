@@ -134,7 +134,7 @@ if section == "📡 AR/VR View":
 
     # Embed A-Frame for AR/VR
     arvr_code = """
-    <iframe src="https://your-username.github.io/your-repository-name/" width="800" height="600" style="border: none;"></iframe>
+    <iframe src="https://om1123.github.io/parabola-app/" width="800" height="600" style="border: none;"></iframe>
     """
     
     # Correct indentation of st.markdown
