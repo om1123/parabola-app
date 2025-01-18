@@ -54,6 +54,7 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
+
 # 2D Parabola Section
 if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
@@ -79,21 +80,39 @@ if section == "📈 2D Parabola":
     with col2:
         st.plotly_chart(fig, use_container_width=True)
 
-# 3D Parabola Section with Plotly
+# 3D Parabola Section with Toggle for AR/VR and PC View
 if section == "🕶️ 3D Parabola":
-    st.header("🕶️ Interactive 3D Parabola")
-    
-    # Generate a 3D Parabola plot using Plotly
-    x = np.linspace(-10, 10, 400)
-    y = np.sqrt(4 * 1 * x)  # Using a = 1 for simplicity
-    z = x  # A simple 3D parabola (can change as needed)
+    st.header("🕶️ 3D Interactive Parabola")
 
-    fig_3d = go.Figure(data=[go.Surface(z=z, x=x, y=y)])
-    fig_3d.update_layout(title="3D Parabola", autosize=True, margin=dict(l=0, r=0, b=0, t=0),
-                         scene=dict(xaxis_title='X', yaxis_title='Y', zaxis_title='Z'),
-                         template="plotly_dark", height=600, width=800)
-    
-    st.plotly_chart(fig_3d)
+    # Option to toggle between AR/VR and normal 3D
+    view_mode = st.radio("Select View Mode:", ["PC View (Interactive 3D)", "AR/VR View (Mobile/VR)"])
+
+    if view_mode == "PC View (Interactive 3D)":
+        st.markdown("**Explore the 3D parabola interactively using Plotly**")
+        # Plotly 3D parabola
+        fig_3d = go.Figure(data=[go.Surface(z=np.square(np.linspace(-10, 10, 100)))] )
+        fig_3d.update_layout(
+            title="3D Parabola", 
+            scene=dict(
+                xaxis=dict(title='X-Axis'),
+                yaxis=dict(title='Y-Axis'),
+                zaxis=dict(title='Z-Axis')
+            ),
+            height=600, width=800
+        )
+        st.plotly_chart(fig_3d, use_container_width=True)
+
+    elif view_mode == "AR/VR View (Mobile/VR)":
+        st.markdown("""
+        **View the 3D Parabola in AR/VR!** 📱🕶️
+
+        Use the button below to activate AR mode on your mobile or VR headset.
+
+        <a-scene embedded arjs>
+            <!-- 3D Parabola Model -->
+            <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
+        </a-scene>
+        """, unsafe_allow_html=True)
 
 # Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
