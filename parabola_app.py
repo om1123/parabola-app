@@ -79,17 +79,21 @@ if section == "📈 2D Parabola":
     with col2:
         st.plotly_chart(fig, use_container_width=True)
 
-# 3D Parabola Section with AR/VR option
-if section == "📡 AR/VR View":
-    st.header("📡 3D Parabola in AR/VR")
+# 3D Parabola Section with Plotly
+if section == "🕶️ 3D Parabola":
+    st.header("🕶️ Interactive 3D Parabola")
+    
+    # Generate a 3D Parabola plot using Plotly
+    x = np.linspace(-10, 10, 400)
+    y = np.sqrt(4 * 1 * x)  # Using a = 1 for simplicity
+    z = x  # A simple 3D parabola (can change as needed)
 
-    # Display AR/VR View in an iframe (for mobile and PC)
-    st.markdown("""
-    <a-scene embedded arjs>
-        <!-- 3D Parabola Model -->
-        <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
-    </a-scene>
-    """, unsafe_allow_html=True)
+    fig_3d = go.Figure(data=[go.Surface(z=z, x=x, y=y)])
+    fig_3d.update_layout(title="3D Parabola", autosize=True, margin=dict(l=0, r=0, b=0, t=0),
+                         scene=dict(xaxis_title='X', yaxis_title='Y', zaxis_title='Z'),
+                         template="plotly_dark", height=600, width=800)
+    
+    st.plotly_chart(fig_3d)
 
 # Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
