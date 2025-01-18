@@ -50,7 +50,7 @@ if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
     col1, col2 = st.columns([1, 2])
     with col1:
-        equation = st.text_input("Enter quadratic equation (ax^2 + bx + c)", "x^2")
+        equation = st.text_input("Enter the equation of the parabola (ax^2 + bx + c)", "x^2")
         match = re.match(r"([-+]?[0-9]*\.?[0-9]*)?x\^2\s*([-+]?[0-9]*\.?[0-9]*)?x?\s*([-+]?[0-9]*\.?[0-9]*)?", equation.replace(" ", ""))
         
         if match:
@@ -62,17 +62,13 @@ if section == "📈 2D Parabola":
             a, b, c = 1, 0, 0
         
         st.markdown(f"**Parsed Coefficients:** a = {a}, b = {b}, c = {c}")
+        st.markdown(f"**Focus:** ({-b / (2 * a):.2f}, {(c - (b ** 2) / (4 * a)) + (1 / (4 * a)):.2f})")
+        st.markdown(f"**Directrix:** y = {(c - (b ** 2) / (4 * a)) - (1 / (4 * a)):.2f}")
     
     with col2:
         fig, focus_x, focus_y, directrix_y = plot_2d_parabola(a, b, c)
         st.plotly_chart(fig, use_container_width=True)
-    
-    with col1:
-        st.markdown(f"**Focus:** ({focus_x:.2f}, {focus_y:.2f})")
-        st.markdown(f"**Directrix:** y = {directrix_y:.2f}")
 
 # More sections will be added for 3D, Sketch Mode, Tangents, Motion, etc.
 
 st.sidebar.info("More features coming soon! 🚀")
-
-
