@@ -154,3 +154,11 @@ elif section == "📐 Tangents & Derivatives":
         ax_tangent.plot(x, slope_tangent * (x - x_tangent) + y_tangent, label="Tangent Line")
         ax_tangent.legend()
         st.pyplot(fig_tangent)
+
+
+
+st.markdown("""
+    <div style="position: fixed; bottom: 10px; left: 10px; font-size: 14px; color: gray;">
+        Developed by Om
+    </div>
+""", unsafe_allow_html=True)
