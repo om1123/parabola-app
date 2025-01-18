@@ -3,28 +3,26 @@ import numpy as np
 import plotly.graph_objects as go
 import re
 
-# Function to plot 2D Parabola
-def plot_2d_parabola(a):
+# Function to plot 2D Parabola with tangent line
+def plot_2d_parabola_with_tangent(a, tangent_x):
     x = np.linspace(-10, 10, 400)  # Set the range from -10 to 10
     y = np.sqrt(4 * a * x)
     y_neg = -np.sqrt(4 * a * x)  # Lower branch for better visualization
     
-    # Calculate focus and directrix
-    focus_x, focus_y = (a, 0)
-    directrix_x = -a
+    # Calculate tangent line at the given x
+    tangent_y = 2 * a * tangent_x  # Derivative of y = sqrt(4ax) gives dy/dx = 2a
+    tangent_y_neg = -2 * a * tangent_x  # For the lower branch
     
-    # Calculate additional properties
-    axis_of_symmetry = "x = 0"
-    directrix_equation = f"x = {-a}"
-    latus_rectum_length = 4 * a
+    # Tangent line equation: y = m(x - x0) + y0, where m is the slope
+    slope = 2 * a * tangent_x  # Derivative of the parabola at the point
+    tangent_line_y = slope * (x - tangent_x) + np.sqrt(4 * a * tangent_x)
     
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Parabola', line=dict(color='deepskyblue', width=3)))
     fig.add_trace(go.Scatter(x=x, y=y_neg, mode='lines', name='Lower Branch', line=dict(color='deepskyblue', width=3, dash='dot')))
-    fig.add_trace(go.Scatter(x=[focus_x], y=[focus_y], mode='markers', name='Focus', marker=dict(color='red', size=12, symbol='x')))
-    fig.add_trace(go.Scatter(x=[directrix_x, directrix_x], y=[-10, 10], mode='lines', name='Directrix', line=dict(color='gold', dash='dash', width=2)))
+    fig.add_trace(go.Scatter(x=[tangent_x], y=[np.sqrt(4 * a * tangent_x)], mode='markers', name='Tangent Point', marker=dict(color='red', size=12, symbol='x')))
+    fig.add_trace(go.Scatter(x=x, y=tangent_line_y, mode='lines', name='Tangent Line', line=dict(color='yellow', width=3, dash='dash')))
     
-    # Enhance grid lines (boxes) for better visibility
     fig.update_xaxes(
         showgrid=True, gridwidth=2, gridcolor='white', zeroline=True, zerolinewidth=3, zerolinecolor='red',
         range=[-10, 10]  # Set x-axis range to [-10, 10]
@@ -35,14 +33,14 @@ def plot_2d_parabola(a):
     )
     
     fig.update_layout(
-        title="2D Parabola", 
+        title="2D Parabola with Tangent", 
         xaxis_title="X-Axis", 
         yaxis_title="Y-Axis", 
         template="plotly_dark", 
         height=600, width=800, 
         margin=dict(l=20, r=20, t=50, b=20)
     )
-    return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
+    return fig
 
 # Function to plot 3D Paraboloid with resolution control
 def plot_3d_parabola(a, b, resolution=100):
@@ -73,9 +71,9 @@ section = st.sidebar.selectbox(
     ("📈 2D Parabola", "🕶️ 3D Parabola")
 )
 
-# 2D Parabola Section
+# 2D Parabola Section with Tangent Feature
 if section == "📈 2D Parabola":
-    st.header("📈 Interactive 2D Parabola")
+    st.header("📈 Interactive 2D Parabola with Tangent")
     col1, col2 = st.columns([1, 2])
     
     with col1:
@@ -88,13 +86,13 @@ if section == "📈 2D Parabola":
             st.error("Invalid equation format! Use y² = 4ax")
             a = 1
         
-        fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length = plot_2d_parabola(a)
+        # Tangent Point Selection
+        tangent_x = st.slider("Select the x-coordinate of the Tangent Point", min_value=-10, max_value=10, value=0, step=0.1)
+        
+        fig = plot_2d_parabola_with_tangent(a, tangent_x)
         
         st.markdown(f"**Parsed Parameter:** a = {a}")
-        st.markdown(f"**Focus:** ({a:.2f}, 0)")
-        st.markdown(f"**Directrix Equation:** {directrix_equation}")
-        st.markdown(f"**Axis of Symmetry:** {axis_of_symmetry}")
-        st.markdown(f"**Latus Rectum Length:** {latus_rectum_length:.2f}")
+        st.markdown(f"**Tangent Point:** x = {tangent_x}")
     
     with col2:
         st.plotly_chart(fig, use_container_width=True)
