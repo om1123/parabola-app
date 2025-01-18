@@ -12,7 +12,7 @@ st.markdown("**Explore and visualize parabolas in 2D and 3D!**")
 
 # Sidebar Navigation
 st.sidebar.header("Navigation")
-section = st.sidebar.radio("Go to:", ["📈 2D Parabola", "🕶️ 3D Parabola", "✏️ Sketch Mode", "📐 Tangents & Derivatives", "🎬 Motion Physics", "📡 AR/VR View", "💾 Save & Share", "🌀 Multiple Parabolas"])
+section = st.sidebar.radio("Go to:", ["📈 2D Parabola", "🕶️ 3D Parabola", "📡 AR/VR View"])
 
 # Function to plot 2D parabola and show directrix & focus
 def plot_2d_parabola(a):
@@ -83,30 +83,30 @@ if section == "📈 2D Parabola":
 if section == "📡 AR/VR View":
     st.header("📡 3D Parabola in AR/VR")
 
-    # Toggle between AR/VR view
-    option = st.radio("Choose View:", ["AR View (Mobile)", "VR View (Mobile)", "Desktop 3D Plot"])
-    
-    if option == "AR View (Mobile)":
-        # AR View using A-Frame
-        st.markdown("""
-        <a-scene embedded arjs>
-            <!-- Simple box model for testing AR -->
-            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-        </a-scene>
-        """, unsafe_allow_html=True)
+    # Detect if the user is on a mobile device for AR/VR features
+    if st.experimental_get_query_params().get('mobile', None):
+        option = st.radio("Choose View:", ["AR View", "VR View"])
 
-    elif option == "VR View (Mobile)":
-        # VR View using A-Frame (similar approach as AR)
-        st.markdown("""
-        <a-scene embedded vr-mode-ui>
-            <!-- Simple box model for testing VR -->
-            <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-        </a-scene>
-        """, unsafe_allow_html=True)
+        if option == "AR View":
+            st.markdown("""
+            <a-scene embedded arjs>
+                <!-- Placeholder AR content, you can add your 3D model here -->
+                <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            </a-scene>
+            """, unsafe_allow_html=True)
 
-    elif option == "Desktop 3D Plot":
-        # Show 3D Plotly Graph for Desktop users
-        fig_3d = plot_2d_parabola(1)[0]  # You can change this if needed
+        elif option == "VR View":
+            st.markdown("""
+            <a-scene embedded vr-mode-ui>
+                <!-- Placeholder VR content, you can add your 3D model here -->
+                <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
+            </a-scene>
+            """, unsafe_allow_html=True)
+
+    else:
+        # Desktop 3D Plot: Displaying a Plotly 3D graph for desktop
+        st.markdown("**3D Parabola for Desktop**")
+        fig_3d = plot_2d_parabola(1)[0]  # Use 2D plot as placeholder for 3D parabola
         st.plotly_chart(fig_3d, use_container_width=True)
 
 # Sidebar Info
