@@ -54,6 +54,7 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
+
 # 2D Parabola Section
 if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
@@ -112,6 +113,7 @@ if section == "🕶️ 3D Parabola":
             <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
         </a-scene>
         """, unsafe_allow_html=True)
-        
+
 # Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
+
