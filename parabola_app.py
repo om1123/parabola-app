@@ -55,6 +55,27 @@ def plot_2d_parabola(a):
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
 
+# Function to plot 3D parabola
+def plot_3d_parabola():
+    # Create a 3D parabola z = x^2 + y^2
+    x = np.linspace(-10, 10, 100)
+    y = np.linspace(-10, 10, 100)
+    x, y = np.meshgrid(x, y)
+    z = x**2 + y**2  # Parabola equation
+
+    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis')])
+    fig.update_layout(
+        title="3D Parabola",
+        scene=dict(
+            xaxis=dict(title='X-Axis'),
+            yaxis=dict(title='Y-Axis'),
+            zaxis=dict(title='Z-Axis')
+        ),
+        height=600, width=800
+    )
+    return fig
+
+
 # 2D Parabola Section
 if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
@@ -90,16 +111,7 @@ if section == "🕶️ 3D Parabola":
     if view_mode == "PC View (Interactive 3D)":
         st.markdown("**Explore the 3D parabola interactively using Plotly**")
         # Plotly 3D parabola
-        fig_3d = go.Figure(data=[go.Surface(z=np.square(np.linspace(-10, 10, 100)))] )
-        fig_3d.update_layout(
-            title="3D Parabola", 
-            scene=dict(
-                xaxis=dict(title='X-Axis'),
-                yaxis=dict(title='Y-Axis'),
-                zaxis=dict(title='Z-Axis')
-            ),
-            height=600, width=800
-        )
+        fig_3d = plot_3d_parabola()
         st.plotly_chart(fig_3d, use_container_width=True)
 
     elif view_mode == "AR/VR View (Mobile/VR)":
@@ -116,4 +128,3 @@ if section == "🕶️ 3D Parabola":
 
 # Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
-
