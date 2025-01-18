@@ -3,12 +3,28 @@
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   </head>
   <body>
-    <a-scene embedded>
-      <!-- Camera -->
-      <a-entity camera position="0 0 3"></a-entity>
+   <a-scene>
+  <!-- 3D Parabola Approximation (line segments) -->
+  <a-entity id="parabola">
+    <!-- Parabola Curve with multiple points (approximation) -->
+    <a-entity line="start: -5 0 0; end: -4 1 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: -4 1 0; end: -3 4 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: -3 4 0; end: -2 9 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: -2 9 0; end: -1 16 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: -1 16 0; end: 0 25 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: 0 25 0; end: 1 16 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: 1 16 0; end: 2 9 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: 2 9 0; end: 3 4 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: 3 4 0; end: 4 1 0; color: blue;" position="0 0 0"></a-entity>
+    <a-entity line="start: 4 1 0; end: 5 0 0; color: blue;" position="0 0 0"></a-entity>
+  </a-entity>
 
-      <!-- A 3D object (e.g., a red box) -->
-      <a-box position="0 1 0" material="color: red;" scale="0.5 0.5 0.5"></a-box>
+  <!-- Sky -->
+  <a-sky color="#ECECEC"></a-sky>
+
+  <!-- Camera -->
+  <a-entity camera position="0 5 10"></a-entity>
+</a-scene>
 
       <!-- Background (sky) -->
       <a-sky color="#ECECEC"></a-sky>
