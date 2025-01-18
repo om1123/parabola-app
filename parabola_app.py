@@ -35,7 +35,6 @@ def plot_2d_parabola(a):
     fig.add_trace(go.Scatter(x=[focus_x], y=[focus_y], mode='markers', name='Focus', marker=dict(color='red', size=12, symbol='x')))
     fig.add_trace(go.Scatter(x=[directrix_x, directrix_x], y=[-10, 10], mode='lines', name='Directrix', line=dict(color='gold', dash='dash', width=2)))
     
-    # Enhance grid lines (boxes) for better visibility
     fig.update_xaxes(
         showgrid=True, gridwidth=2, gridcolor='white', zeroline=True, zerolinewidth=3, zerolinecolor='red',
         range=[-10, 10]  # Set x-axis range to [-10, 10]
@@ -54,29 +53,6 @@ def plot_2d_parabola(a):
         margin=dict(l=20, r=20, t=50, b=20)
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
-
-# Function to plot 3D paraboloid with resolution control
-def plot_3d_parabola(a, b, resolution=100):
-    x = np.linspace(-10, 10, resolution)
-    y = np.linspace(-10, 10, resolution)
-    x, y = np.meshgrid(x, y)
-    
-    z = a * x**2 + b * y**2
-    
-    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis', cmin=-100, cmax=100)])
-    
-    fig.update_layout(
-        title="3D Paraboloid",
-        scene=dict(
-            xaxis_title="X-Axis",
-            yaxis_title="Y-Axis",
-            zaxis_title="Z-Axis"
-        ),
-        template="plotly_dark",
-        height=600, width=800,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-    return fig
 
 # 2D Parabola Section
 if section == "📈 2D Parabola":
@@ -103,26 +79,39 @@ if section == "📈 2D Parabola":
     with col2:
         st.plotly_chart(fig, use_container_width=True)
 
-# 3D Parabola Section with Resolution Slider
+# 3D Parabola Section with Toggle for AR/VR and PC View
 if section == "🕶️ 3D Parabola":
-    st.header("🕶️ Interactive 3D Parabola")
-    col1, col2 = st.columns([1, 2])
-    
-    with col1:
-        # Inputs for 3D parabola equation (z = ax^2 + by^2)
-        a = st.number_input("Enter value for 'a'", value=1.0, step=0.1)
-        b = st.number_input("Enter value for 'b'", value=1.0, step=0.1)
-        
-        # Resolution slider to control plot responsiveness
-        resolution = st.slider("Resolution", min_value=50, max_value=200, value=100, step=10, help="Higher values may decrease responsiveness.")
-        
-        # Generate the 3D plot with the provided parameters and resolution
-        fig = plot_3d_parabola(a, b, resolution)
-        
-        st.markdown(f"**Parsed Parameters:** a = {a}, b = {b}")
-    
-    with col2:
-        st.plotly_chart(fig, use_container_width=True)
+    st.header("🕶️ 3D Interactive Parabola")
 
-# More sections will be added for Sketch Mode, Tangents, Motion, etc.
+    # Option to toggle between AR/VR and normal 3D
+    view_mode = st.radio("Select View Mode:", ["PC View (Interactive 3D)", "AR/VR View (Mobile/VR)"])
+
+    if view_mode == "PC View (Interactive 3D)":
+        st.markdown("**Explore the 3D parabola interactively using Plotly**")
+        # Plotly 3D parabola
+        fig_3d = go.Figure(data=[go.Surface(z=np.square(np.linspace(-10, 10, 100)))] )
+        fig_3d.update_layout(
+            title="3D Parabola", 
+            scene=dict(
+                xaxis=dict(title='X-Axis'),
+                yaxis=dict(title='Y-Axis'),
+                zaxis=dict(title='Z-Axis')
+            ),
+            height=600, width=800
+        )
+        st.plotly_chart(fig_3d, use_container_width=True)
+
+    elif view_mode == "AR/VR View (Mobile/VR)":
+        st.markdown("""
+        **View the 3D Parabola in AR/VR!** 📱🕶️
+
+        Use the button below to activate AR mode on your mobile or VR headset.
+
+        <a-scene embedded arjs>
+            <!-- 3D Parabola Model -->
+            <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
+        </a-scene>
+        """, unsafe_allow_html=True)
+        
+# Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
