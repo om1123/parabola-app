@@ -8,6 +8,9 @@ import matplotlib.animation as animation
 # Title
 st.title("Parabola Explorer 🚀")
 
+# Common x range for all plots
+x = np.linspace(-10, 10, 400)
+
 # Navigation Sidebar
 st.sidebar.title("Explore Parabolas")
 section = st.sidebar.radio("Choose Section", (
@@ -29,7 +32,6 @@ if section == "🎛️ 2D Parabola Features":
     c = st.slider('Value of c', -10, 10, 0)
 
     # Function to plot parabola
-    x = np.linspace(-10, 10, 400)
     y = a * x**2 + b * x + c
 
     fig_2d, ax_2d = plt.subplots()
@@ -42,8 +44,9 @@ if section == "🎛️ 2D Parabola Features":
 # 3D Parabola Features 🕶️
 elif section == "🕶️ 3D Parabola Features":
     st.header("🕶️ 3D Parabola Features")
-    fig_3d = plt.figure()
-    ax_3d = fig_3d.add_subplot(111, projection='3d')
+    a = st.slider('Value of a', -10, 10, 1)
+    b = st.slider('Value of b', -10, 10, 0)
+    c = st.slider('Value of c', -10, 10, 0)
 
     # Parametric equations for a 3D parabola
     u = np.linspace(-10, 10, 400)
@@ -51,21 +54,31 @@ elif section == "🕶️ 3D Parabola Features":
     U, V = np.meshgrid(u, v)
     Z = a * U**2 + b * V + c
 
+    fig_3d = plt.figure()
+    ax_3d = fig_3d.add_subplot(111, projection='3d')
     ax_3d.plot_surface(U, V, Z, cmap='viridis')
     st.pyplot(fig_3d)
 
 # Sketch Mode ✏️
 elif section == "✏️ Sketch Mode":
     st.header("✏️ Sketch Mode")
+    st.write("Click on the graph to plot points. It will calculate the equation of your parabola.")
+
     fig_sketch = go.Figure()
     fig_sketch.add_trace(go.Scatter(x=[], y=[], mode='markers', marker=dict(size=12, color='blue')))
     fig_sketch.update_layout(title="Draw Your Parabola", clickmode='event+select')
+
+    # Handle clicks for drawing
+    fig_sketch.update_traces(marker=dict(size=15, color="red"))
     st.plotly_chart(fig_sketch)
 
 # Tangents & Derivatives 📐
 elif section == "📐 Tangents & Derivatives":
     st.header("📐 Tangents & Derivatives")
-    
+    a = st.slider('Value of a', -10, 10, 1)
+    b = st.slider('Value of b', -10, 10, 0)
+    c = st.slider('Value of c', -10, 10, 0)
+
     def derivative(x, a, b):
         return 2 * a * x + b
 
@@ -74,7 +87,7 @@ elif section == "📐 Tangents & Derivatives":
     slope_tangent = derivative(x_tangent, a, b)
 
     fig_tangent, ax_tangent = plt.subplots()
-    ax_tangent.plot(x, y, label=f'y = {a}x² + {b}x + {c}')
+    ax_tangent.plot(x, a * x**2 + b * x + c, label=f'y = {a}x² + {b}x + {c}')
     ax_tangent.plot(x_tangent, y_tangent, 'ro', label="Tangent Point")
     ax_tangent.plot(x, slope_tangent * (x - x_tangent) + y_tangent, label="Tangent Line")
     ax_tangent.legend()
@@ -83,6 +96,11 @@ elif section == "📐 Tangents & Derivatives":
 # Motion Physics 🎬
 elif section == "🎬 Motion Physics":
     st.header("🎬 Motion Physics - Parabola Animation")
+    a = st.slider('Value of a', -10, 10, 1)
+    b = st.slider('Value of b', -10, 10, 0)
+    c = st.slider('Value of c', -10, 10, 0)
+
+    # Create the figure and axis for animation
     fig_anim, ax_anim = plt.subplots()
     line, = ax_anim.plot([], [], 'r-')
 
@@ -114,7 +132,7 @@ elif section == "💾 Save & Share":
         href = f'<a href="data:file/txt;base64,{encoded}" download="{filename}">Download your parabola</a>'
         return href
 
-    # Provide a download link
+    # Provide a download link for the 3D figure
     st.markdown(download_link(fig_3d, '3d_parabola_plot.png'), unsafe_allow_html=True)
 
 # Multiple Parabolas 🌀
@@ -124,10 +142,11 @@ elif section == "🌀 Multiple Parabolas":
     b2 = st.slider('Value of b (for second parabola)', -10, 10, 0)
     c2 = st.slider('Value of c (for second parabola)', -10, 10, 0)
 
+    # Create the second parabola
     y2 = a2 * x**2 + b2 * x + c2
 
     fig_multiple, ax_multiple = plt.subplots()
-    ax_multiple.plot(x, y, label=f'First Parabola: y = {a}x² + {b}x + {c}')
+    ax_multiple.plot(x, a * x**2 + b * x + c, label=f'First Parabola: y = {a}x² + {b}x + {c}')
     ax_multiple.plot(x, y2, label=f'Second Parabola: y = {a2}x² + {b2}x + {c2}')
     ax_multiple.legend()
     st.pyplot(fig_multiple)
