@@ -2,6 +2,7 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 import re
+import matplotlib.pyplot as plt
 
 # Function to plot 2D Parabola
 def plot_2d_parabola(a):
@@ -70,7 +71,7 @@ def plot_3d_parabola(a, b, resolution=100):
 # Section selection in the sidebar
 section = st.sidebar.selectbox(
     "Choose the Section",
-    ("📈 2D Parabola", "🕶️ 3D Parabola")
+    ("📈 2D Parabola", "🕶️ 3D Parabola", "📐 Tangents & Derivatives")
 )
 
 # 2D Parabola Section
@@ -100,7 +101,7 @@ if section == "📈 2D Parabola":
         st.plotly_chart(fig, use_container_width=True)
 
 # 3D Parabola Section with Resolution Slider
-if section == "🕶️ 3D Parabola":
+elif section == "🕶️ 3D Parabola":
     st.header("🕶️ Interactive 3D Parabola")
     col1, col2 = st.columns([1, 2])
     
@@ -119,3 +120,37 @@ if section == "🕶️ 3D Parabola":
     
     with col2:
         st.plotly_chart(fig, use_container_width=True)
+
+# Tangent Section
+elif section == "📐 Tangents & Derivatives":
+    st.header("📐 Tangents & Derivatives")
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        a = st.slider('Value of a', -10, 10, 1)
+        b = st.slider('Value of b', -10, 10, 0)
+        c = st.slider('Value of c', -10, 10, 0)
+        
+        # Derivative calculation
+        def derivative(x, a, b):
+            return 2 * a * x + b
+        
+        # Select x-coordinate for the tangent
+        x_tangent = st.slider('Select x-value for tangent', -10, 10, 0)
+        y_tangent = a * x_tangent**2 + b * x_tangent + c
+        slope_tangent = derivative(x_tangent, a, b)
+        
+        # Display the equation of the parabola and tangent line
+        st.markdown(f"**Parabola Equation:** y = {a}x² + {b}x + {c}")
+        st.markdown(f"**Tangent Point:** ({x_tangent}, {y_tangent})")
+        st.markdown(f"**Slope of Tangent Line:** {slope_tangent}")
+
+    with col2:
+        # Plotting the parabola and tangent line using Matplotlib
+        x = np.linspace(-10, 10, 400)
+        fig_tangent, ax_tangent = plt.subplots()
+        ax_tangent.plot(x, a * x**2 + b * x + c, label=f'y = {a}x² + {b}x + {c}')
+        ax_tangent.plot(x_tangent, y_tangent, 'ro', label="Tangent Point")
+        ax_tangent.plot(x, slope_tangent * (x - x_tangent) + y_tangent, label="Tangent Line")
+        ax_tangent.legend()
+        st.pyplot(fig_tangent)
