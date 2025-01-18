@@ -15,7 +15,6 @@ st.sidebar.header("Navigation")
 section = st.sidebar.radio("Go to:", ["📈 2D Parabola", "🕶️ 3D Parabola", "✏️ Sketch Mode", "📐 Tangents & Derivatives", "🎬 Motion Physics", "📡 AR/VR View", "💾 Save & Share", "🌀 Multiple Parabolas"])
 
 # Function to plot 2D parabola and show directrix & focus
-# Function to plot 2D parabola and show directrix & focus
 def plot_2d_parabola(a):
     x = np.linspace(-10, 10, 400)  # Set the range from -10 to 10
     y = np.sqrt(4 * a * x)
@@ -56,6 +55,28 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
+# Function to plot 3D paraboloid
+def plot_3d_parabola(a, b):
+    x = np.linspace(-10, 10, 400)
+    y = np.linspace(-10, 10, 400)
+    x, y = np.meshgrid(x, y)
+    
+    z = a * x**2 + b * y**2
+    
+    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis', cmin=-100, cmax=100)])
+    
+    fig.update_layout(
+        title="3D Paraboloid",
+        scene=dict(
+            xaxis_title="X-Axis",
+            yaxis_title="Y-Axis",
+            zaxis_title="Z-Axis"
+        ),
+        template="plotly_dark",
+        height=600, width=800,
+        margin=dict(l=20, r=20, t=50, b=20)
+    )
+    return fig
 
 # 2D Parabola Section
 if section == "📈 2D Parabola":
@@ -82,6 +103,23 @@ if section == "📈 2D Parabola":
     with col2:
         st.plotly_chart(fig, use_container_width=True)
 
-# More sections will be added for 3D, Sketch Mode, Tangents, Motion, etc.
+# 3D Parabola Section
+if section == "🕶️ 3D Parabola":
+    st.header("🕶️ Interactive 3D Parabola")
+    col1, col2 = st.columns([1, 2])
+    
+    with col1:
+        # Inputs for 3D parabola equation (z = ax^2 + by^2)
+        a = st.number_input("Enter value for 'a'", value=1.0, step=0.1)
+        b = st.number_input("Enter value for 'b'", value=1.0, step=0.1)
+        
+        # Generate the 3D plot with the provided parameters
+        fig = plot_3d_parabola(a, b)
+        
+        st.markdown(f"**Parsed Parameters:** a = {a}, b = {b}")
+    
+    with col2:
+        st.plotly_chart(fig, use_container_width=True)
 
+# More sections will be added for Sketch Mode, Tangents, Motion, etc.
 st.sidebar.info("More features coming soon! 🚀")
