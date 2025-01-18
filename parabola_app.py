@@ -12,7 +12,7 @@ st.markdown("**Explore and visualize parabolas in 2D and 3D!**")
 
 # Sidebar Navigation
 st.sidebar.header("Navigation")
-section = st.sidebar.radio("Go to:", ["📈 2D Parabola", "🕶️ 3D Parabola", "📡 AR/VR View"])
+section = st.sidebar.radio("Go to:", ["📈 2D Parabola", "🕶️ 3D Parabola", "✏️ Sketch Mode", "📐 Tangents & Derivatives", "🎬 Motion Physics", "📡 AR/VR View", "💾 Save & Share", "🌀 Multiple Parabolas"])
 
 # Function to plot 2D parabola and show directrix & focus
 def plot_2d_parabola(a):
@@ -83,31 +83,13 @@ if section == "📈 2D Parabola":
 if section == "📡 AR/VR View":
     st.header("📡 3D Parabola in AR/VR")
 
-    # Detect if the user is on a mobile device for AR/VR features
-    if st.experimental_get_query_params().get('mobile', None):
-        option = st.radio("Choose View:", ["AR View", "VR View"])
-
-        if option == "AR View":
-            st.markdown("""
-            <a-scene embedded arjs>
-                <!-- Placeholder AR content, you can add your 3D model here -->
-                <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-            </a-scene>
-            """, unsafe_allow_html=True)
-
-        elif option == "VR View":
-            st.markdown("""
-            <a-scene embedded vr-mode-ui>
-                <!-- Placeholder VR content, you can add your 3D model here -->
-                <a-box position="0 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-            </a-scene>
-            """, unsafe_allow_html=True)
-
-    else:
-        # Desktop 3D Plot: Displaying a Plotly 3D graph for desktop
-        st.markdown("**3D Parabola for Desktop**")
-        fig_3d = plot_2d_parabola(1)[0]  # Use 2D plot as placeholder for 3D parabola
-        st.plotly_chart(fig_3d, use_container_width=True)
+    # Display AR/VR View in an iframe (for mobile and PC)
+    st.markdown("""
+    <a-scene embedded arjs>
+        <!-- 3D Parabola Model -->
+        <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
+    </a-scene>
+    """, unsafe_allow_html=True)
 
 # Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
