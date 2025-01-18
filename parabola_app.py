@@ -1,146 +1,106 @@
 import streamlit as st
 import numpy as np
+import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import re
+import base64
+import matplotlib.animation as animation
 
-# App Configuration
-st.set_page_config(page_title="Parabola Explorer", layout="wide")
-
-# Title and Intro
-st.title("🔷 Parabola Explorer 🔷")
-st.markdown("**Explore and visualize parabolas in 2D and 3D!**")
-
-# Sidebar Navigation
-st.sidebar.header("Navigation")
-section = st.sidebar.radio("Go to:", ["📈 2D Parabola", "🕶️ 3D Parabola", "✏️ Sketch Mode", "📐 Tangents & Derivatives", "🎬 Motion Physics", "📡 AR/VR View", "💾 Save & Share", "🌀 Multiple Parabolas"])
-
-# Function to plot 2D parabola and show directrix & focus
-def plot_2d_parabola(a):
-    x = np.linspace(-10, 10, 400)  # Set the range from -10 to 10
-    y = np.sqrt(4 * a * x)
-    y_neg = -np.sqrt(4 * a * x)  # Lower branch for better visualization
-    
-    # Calculate focus and directrix
-    focus_x, focus_y = (a, 0)
-    directrix_x = -a
-    
-    # Calculate additional properties
-    axis_of_symmetry = "x = 0"
-    directrix_equation = f"x = {-a}"
-    latus_rectum_length = 4 * a
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', name='Parabola', line=dict(color='deepskyblue', width=3)))
-    fig.add_trace(go.Scatter(x=x, y=y_neg, mode='lines', name='Lower Branch', line=dict(color='deepskyblue', width=3, dash='dot')))
-    fig.add_trace(go.Scatter(x=[focus_x], y=[focus_y], mode='markers', name='Focus', marker=dict(color='red', size=12, symbol='x')))
-    fig.add_trace(go.Scatter(x=[directrix_x, directrix_x], y=[-10, 10], mode='lines', name='Directrix', line=dict(color='gold', dash='dash', width=2)))
-    
-    # Enhance grid lines (boxes) for better visibility
-    fig.update_xaxes(
-        showgrid=True, gridwidth=2, gridcolor='white', zeroline=True, zerolinewidth=3, zerolinecolor='red',
-        range=[-10, 10]  # Set x-axis range to [-10, 10]
-    )
-    fig.update_yaxes(
-        showgrid=True, gridwidth=2, gridcolor='white', zeroline=True, zerolinewidth=3, zerolinecolor='red',
-        range=[-10, 10]  # Set y-axis range to [-10, 10]
-    )
-    
-    fig.update_layout(
-        title="2D Parabola", 
-        xaxis_title="X-Axis", 
-        yaxis_title="Y-Axis", 
-        template="plotly_dark", 
-        height=600, width=800, 
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-    return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
-
-# Function to plot 3D paraboloid with resolution control
-def plot_3d_parabola(a, b, resolution=100):
-    x = np.linspace(-10, 10, resolution)
-    y = np.linspace(-10, 10, resolution)
-    x, y = np.meshgrid(x, y)
-    
-    z = a * x**2 + b * y**2
-    
-    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis', cmin=-100, cmax=100)])
-    
-    fig.update_layout(
-        title="3D Paraboloid",
-        scene=dict(
-            xaxis_title="X-Axis",
-            yaxis_title="Y-Axis",
-            zaxis_title="Z-Axis"
-        ),
-        template="plotly_dark",
-        height=600, width=800,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-    return fig
+# Title
+st.title("Parabola Explorer 🚀")
 
 # 2D Parabola Section
-if section == "📈 2D Parabola":
-    st.header("📈 Interactive 2D Parabola")
-    col1, col2 = st.columns([1, 2])
-    with col1:
-        equation = st.text_input("Enter the equation of the parabola (y² = 4ax)", "y^2=4x")
-        match = re.match(r"y\^2=4\*?([-+]?[0-9]*\.?[0-9]*)x", equation.replace(" ", ""))
-        
-        if match:
-            a = float(match.group(1) or 1)
-        else:
-            st.error("Invalid equation format! Use y² = 4ax")
-            a = 1
-        
-        fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length = plot_2d_parabola(a)
-        
-        st.markdown(f"**Parsed Parameter:** a = {a}")
-        st.markdown(f"**Focus:** ({a:.2f}, 0)")
-        st.markdown(f"**Directrix Equation:** {directrix_equation}")
-        st.markdown(f"**Axis of Symmetry:** {axis_of_symmetry}")
-        st.markdown(f"**Latus Rectum Length:** {latus_rectum_length:.2f}")
-    
-    with col2:
-        st.plotly_chart(fig, use_container_width=True)
+st.header("🎛️ 2D Parabola Features")
+a = st.slider('Value of a', -10, 10, 1)
+b = st.slider('Value of b', -10, 10, 0)
+c = st.slider('Value of c', -10, 10, 0)
 
-# 3D Parabola Section with Resolution Slider
-if section == "🕶️ 3D Parabola":
-    st.header("🕶️ Interactive 3D Parabola")
-    col1, col2 = st.columns([1, 2])
-    
-    with col1:
-        # Inputs for 3D parabola equation (z = ax^2 + by^2)
-        a = st.number_input("Enter value for 'a'", value=1.0, step=0.1)
-        b = st.number_input("Enter value for 'b'", value=1.0, step=0.1)
-        
-        # Resolution slider to control plot responsiveness
-        resolution = st.slider("Resolution", min_value=50, max_value=200, value=100, step=10, help="Higher values may decrease responsiveness.")
-        
-        # Generate the 3D plot with the provided parameters and resolution
-        fig = plot_3d_parabola(a, b, resolution)
-        
-        st.markdown(f"**Parsed Parameters:** a = {a}, b = {b}")
-    
-    with col2:
-        st.plotly_chart(fig, use_container_width=True)
-# AR/VR Section
-if section == "📡 AR/VR View":
-    st.header("📡 AR/VR 3D Parabola View")
-    
-    # Provide a brief explanation
-    st.markdown("""
-    🕶️ **Explore the Parabola in AR/VR!** Use the controls below to visualize and interact with the parabola in an immersive 3D environment.
-    """)
+# Function to plot parabola
+x = np.linspace(-10, 10, 400)
+y = a * x**2 + b * x + c
 
-    # Embed A-Frame for AR/VR
-    arvr_code = """
-    <iframe src="https://om1123.github.io/parabola-app/" width="800" height="600" style="border: none;"></iframe>
-    """
-    
-    # Correct indentation of st.markdown
-    st.markdown(arvr_code, unsafe_allow_html=True)
+fig, ax = plt.subplots()
+ax.plot(x, y, label=f'y = {a}x² + {b}x + {c}')
+ax.set_xlabel('x')
+ax.set_ylabel('y')
+ax.legend()
+st.pyplot(fig)
 
-    st.info("🚀 Explore the parabola in AR/VR using the embedded viewer.")
+# 3D Parabola Section
+st.header("🕶️ 3D Parabola Features")
+fig_3d = plt.figure()
+ax_3d = fig_3d.add_subplot(111, projection='3d')
 
-# More sections will be added for Sketch Mode, Tangents, Motion, etc.
-st.sidebar.info("More features coming soon! 🚀")
+# Parametric equations for a 3D parabola
+u = np.linspace(-10, 10, 400)
+v = np.linspace(-10, 10, 400)
+U, V = np.meshgrid(u, v)
+Z = a * U**2 + b * V + c
+
+ax_3d.plot_surface(U, V, Z, cmap='viridis')
+st.pyplot(fig_3d)
+
+# Sketch Mode Section ✏️
+st.header("✏️ Sketch Mode")
+fig = go.Figure()
+fig.add_trace(go.Scatter(x=[], y=[], mode='markers', marker=dict(size=12, color='blue')))
+fig.update_layout(title="Draw Your Parabola", clickmode='event+select')
+st.plotly_chart(fig)
+
+# Tangents & Derivatives Section 📐
+st.header("📐 Tangents & Derivatives")
+def derivative(x, a, b):
+    return 2 * a * x + b
+
+x_tangent = st.slider('Select x-value for tangent', -10, 10, 0)
+y_tangent = a * x_tangent**2 + b * x_tangent + c
+slope_tangent = derivative(x_tangent, a, b)
+
+fig_tangent, ax_tangent = plt.subplots()
+ax_tangent.plot(x, y, label=f'y = {a}x² + {b}x + {c}')
+ax_tangent.plot(x_tangent, y_tangent, 'ro', label="Tangent Point")
+ax_tangent.plot(x, slope_tangent * (x - x_tangent) + y_tangent, label="Tangent Line")
+ax_tangent.legend()
+st.pyplot(fig_tangent)
+
+# Motion Physics Section 🎬
+st.header("🎬 Motion Physics - Parabola Animation")
+fig_anim, ax_anim = plt.subplots()
+line, = ax_anim.plot([], [], 'r-')
+
+def init():
+    line.set_data([], [])
+    return line,
+
+def animate(i):
+    y = a * x**2 + b * x + c
+    line.set_data(x[:i], y[:i])
+    return line,
+
+ani = animation.FuncAnimation(fig_anim, animate, frames=400, init_func=init, blit=True)
+st.pyplot(fig_anim)
+
+# Save & Share Section 💾
+st.header("💾 Save & Share")
+def download_link(fig, filename):
+    fig.savefig(filename)
+    with open(filename, "rb") as f:
+        encoded = base64.b64encode(f.read()).decode()
+    href = f'<a href="data:file/txt;base64,{encoded}" download="{filename}">Download your parabola</a>'
+    return href
+
+# Provide a download link
+st.markdown(download_link(fig_3d, '3d_parabola_plot.png'), unsafe_allow_html=True)
+
+# Multiple Parabolas Comparison 🌀
+st.header("🌀 Multiple Parabolas")
+a2 = st.slider('Value of a (for second parabola)', -10, 10, 1)
+b2 = st.slider('Value of b (for second parabola)', -10, 10, 0)
+c2 = st.slider('Value of c (for second parabola)', -10, 10, 0)
+
+y2 = a2 * x**2 + b2 * x + c2
+
+fig_multiple, ax_multiple = plt.subplots()
+ax_multiple.plot(x, y, label=f'First Parabola: y = {a}x² + {b}x + {c}')
+ax_multiple.plot(x, y2, label=f'Second Parabola: y = {a2}x² + {b2}x + {c2}')
+ax_multiple.legend()
+st.pyplot(fig_multiple)
