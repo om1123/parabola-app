@@ -3,7 +3,11 @@ import numpy as np
 import plotly.graph_objects as go
 import re
 import matplotlib.pyplot as plt
-
+st.markdown("""
+    <div style="position: fixed; bottom: 10px; left: 10px; font-size: 14px; color: gray;">
+        Developed by Om
+    </div>
+""", unsafe_allow_html=True)
 # Function to plot 2D Parabola
 def plot_2d_parabola(a):
     x = np.linspace(-10, 10, 400)  # Set the range from -10 to 10
@@ -157,8 +161,4 @@ elif section == "📐 Tangents & Derivatives":
 
 
 
-st.markdown("""
-    <div style="position: fixed; bottom: 10px; left: 10px; font-size: 14px; color: gray;">
-        Developed by Om
-    </div>
-""", unsafe_allow_html=True)
+
