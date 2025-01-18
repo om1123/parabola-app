@@ -123,44 +123,22 @@ if section == "🕶️ 3D Parabola":
     
     with col2:
         st.plotly_chart(fig, use_container_width=True)
-
-# AR/VR Section
 if section == "📡 AR/VR View":
-    st.header("📡 AR/VR Interactive View")
+    st.header("📡 AR/VR 3D Parabola View")
     
-    # Embed AR/VR functionality using A-Frame and AR.js
+    # Provide a brief explanation
     st.markdown("""
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    🕶️ **Explore the Parabola in AR/VR!** Use the controls below to visualize and interact with the parabola in an immersive 3D environment.
+    """)
 
-    <!-- AR.js - Augmented Reality -->
-    <a-scene embedded arjs>
-        <!-- Define a marker to track and attach the 3D parabola -->
-        <a-marker preset="hiro">
-            <a-box position="0 0.5 0" material="color: blue;" scale="0.5 0.5 0.5"></a-box> <!-- Placeholder -->
-        </a-marker>
+    # Embed A-Frame for AR/VR
+    arvr_code = """
+    <iframe src="https://your-username.github.io/your-repository-name/" width="800" height="600" style="border: none;"></iframe>
+    """
+    
+    st.markdown(arvr_code, unsafe_allow_html=True)
 
-        <!-- VR Camera -->
-        <a-entity camera></a-entity>
-    </a-scene>
-
-    <style>
-        body { margin: 0; }
-        a-scene { width: 100%; height: 100%; }
-    </style>
-    """, unsafe_allow_html=True)
-
-    # VR Section (optional)
-    st.markdown("""
-    <a-scene embedded>
-        <!-- 3D Parabola Object -->
-        <a-box position="0 1 0" material="color: red;" scale="0.5 0.5 0.5"></a-box>
-
-        <!-- VR Camera -->
-        <a-entity camera position="0 0 3"></a-entity>
-        <a-sky color="#ECECEC"></a-sky>
-    </a-scene>
-    """, unsafe_allow_html=True)
+    st.info("🚀 Explore the parabola in AR/VR using the embedded viewer.")
 
 # More sections will be added for Sketch Mode, Tangents, Motion, etc.
 st.sidebar.info("More features coming soon! 🚀")
