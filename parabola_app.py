@@ -67,6 +67,12 @@ def plot_3d_parabola(a, b, resolution=100):
     )
     return fig
 
+# Section selection in the sidebar
+section = st.sidebar.selectbox(
+    "Choose the Section",
+    ("📈 2D Parabola", "🕶️ 3D Parabola")
+)
+
 # 2D Parabola Section
 if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
