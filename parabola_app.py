@@ -55,10 +55,10 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
-# Function to plot 3D paraboloid
-def plot_3d_parabola(a, b):
-    x = np.linspace(-10, 10, 400)
-    y = np.linspace(-10, 10, 400)
+# Function to plot 3D paraboloid with resolution control
+def plot_3d_parabola(a, b, resolution=100):
+    x = np.linspace(-10, 10, resolution)
+    y = np.linspace(-10, 10, resolution)
     x, y = np.meshgrid(x, y)
     
     z = a * x**2 + b * y**2
@@ -103,7 +103,7 @@ if section == "📈 2D Parabola":
     with col2:
         st.plotly_chart(fig, use_container_width=True)
 
-# 3D Parabola Section
+# 3D Parabola Section with Resolution Slider
 if section == "🕶️ 3D Parabola":
     st.header("🕶️ Interactive 3D Parabola")
     col1, col2 = st.columns([1, 2])
@@ -113,8 +113,11 @@ if section == "🕶️ 3D Parabola":
         a = st.number_input("Enter value for 'a'", value=1.0, step=0.1)
         b = st.number_input("Enter value for 'b'", value=1.0, step=0.1)
         
-        # Generate the 3D plot with the provided parameters
-        fig = plot_3d_parabola(a, b)
+        # Resolution slider to control plot responsiveness
+        resolution = st.slider("Resolution", min_value=50, max_value=200, value=100, step=10, help="Higher values may decrease responsiveness.")
+        
+        # Generate the 3D plot with the provided parameters and resolution
+        fig = plot_3d_parabola(a, b, resolution)
         
         st.markdown(f"**Parsed Parameters:** a = {a}, b = {b}")
     
