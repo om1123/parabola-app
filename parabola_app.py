@@ -2,7 +2,6 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 import re
-import os
 
 # App Configuration
 st.set_page_config(page_title="Parabola Explorer", layout="wide")
@@ -55,6 +54,28 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
+
+# Function to plot 3D parabola
+def plot_3d_parabola():
+    # Create a 3D parabola z = x^2 + y^2
+    x = np.linspace(-10, 10, 100)
+    y = np.linspace(-10, 10, 100)
+    x, y = np.meshgrid(x, y)
+    z = x**2 + y**2  # Parabola equation
+
+    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis')])
+    fig.update_layout(
+        title="3D Parabola",
+        scene=dict(
+            xaxis=dict(title='X-Axis'),
+            yaxis=dict(title='Y-Axis'),
+            zaxis=dict(title='Z-Axis')
+        ),
+        height=600, width=800
+    )
+    return fig
+
+
 # 2D Parabola Section
 if section == "📈 2D Parabola":
     st.header("📈 Interactive 2D Parabola")
@@ -80,17 +101,30 @@ if section == "📈 2D Parabola":
     with col2:
         st.plotly_chart(fig, use_container_width=True)
 
-# 3D Parabola Section with AR/VR option
-if section == "📡 AR/VR View":
-    st.header("📡 3D Parabola in AR/VR")
+# 3D Parabola Section with Toggle for AR/VR and PC View
+if section == "🕶️ 3D Parabola":
+    st.header("🕶️ 3D Interactive Parabola")
 
-    # A-Frame AR/VR Example
-    st.markdown("""
-    <a-scene embedded arjs>
-        <!-- 3D Parabola Model -->
-        <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
-    </a-scene>
-    """, unsafe_allow_html=True)
+    # Option to toggle between AR/VR and normal 3D
+    view_mode = st.radio("Select View Mode:", ["PC View (Interactive 3D)", "AR/VR View (Mobile/VR)"])
+
+    if view_mode == "PC View (Interactive 3D)":
+        st.markdown("**Explore the 3D parabola interactively using Plotly**")
+        # Plotly 3D parabola
+        fig_3d = plot_3d_parabola()
+        st.plotly_chart(fig_3d, use_container_width=True)
+
+    elif view_mode == "AR/VR View (Mobile/VR)":
+        st.markdown("""
+        **View the 3D Parabola in AR/VR!** 📱🕶️
+
+        Use the button below to activate AR mode on your mobile or VR headset.
+
+        <a-scene embedded arjs>
+            <!-- 3D Parabola Model -->
+            <a-entity gltf-model="url(3d_parabola_model.gltf)" scale="1 1 1" position="0 0 0" rotation="0 0 0"></a-entity>
+        </a-scene>
+        """, unsafe_allow_html=True)
 
 # Sidebar Info
 st.sidebar.info("More features coming soon! 🚀")
