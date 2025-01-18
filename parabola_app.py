@@ -123,6 +123,7 @@ if section == "🕶️ 3D Parabola":
     
     with col2:
         st.plotly_chart(fig, use_container_width=True)
+# AR/VR Section
 if section == "📡 AR/VR View":
     st.header("📡 AR/VR 3D Parabola View")
     
@@ -133,11 +134,10 @@ if section == "📡 AR/VR View":
 
     # Embed A-Frame for AR/VR
     arvr_code = """
-<iframe src="https://your-username.github.io/your-repository-name/" width="800" height="600" style="border: none;"></iframe>
-"""
-
-st.markdown(arvr_code, unsafe_allow_html=True)
+    <iframe src="https://your-username.github.io/your-repository-name/" width="800" height="600" style="border: none;"></iframe>
+    """
     
+    # Correct indentation of st.markdown
     st.markdown(arvr_code, unsafe_allow_html=True)
 
     st.info("🚀 Explore the parabola in AR/VR using the embedded viewer.")
