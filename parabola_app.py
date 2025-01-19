@@ -11,7 +11,11 @@ st.markdown("""
 
 # Function to plot 2D Parabola
 def plot_2d_parabola(a):
-    x = np.linspace(-10, 10, 400)  # Set the range from -10 to 10
+    if a > 0:
+        x = np.linspace(0, 10, 400)  # Valid range for positive a
+    else:
+        x = np.linspace(-10, 0, 400)  # Valid range for negative a
+    
     y = np.sqrt(4 * a * x)
     y_neg = -np.sqrt(4 * a * x)  # Lower branch for better visualization
     
@@ -50,28 +54,6 @@ def plot_2d_parabola(a):
     )
     return fig, focus_x, focus_y, directrix_x, axis_of_symmetry, directrix_equation, latus_rectum_length
 
-# Function to plot 3D Paraboloid with resolution control
-def plot_3d_parabola(a, b, resolution=100):
-    x = np.linspace(-10, 10, resolution)
-    y = np.linspace(-10, 10, resolution)
-    x, y = np.meshgrid(x, y)
-    
-    z = a * x**2 + b * y**2
-    
-    fig = go.Figure(data=[go.Surface(z=z, x=x, y=y, colorscale='Viridis', cmin=-100, cmax=100)])
-    
-    fig.update_layout(
-        title="3D Paraboloid",
-        scene=dict(
-            xaxis_title="X-Axis",
-            yaxis_title="Y-Axis",
-            zaxis_title="Z-Axis"
-        ),
-        template="plotly_dark",
-        height=600, width=800,
-        margin=dict(l=20, r=20, t=50, b=20)
-    )
-    return fig
 
 # Section selection in the sidebar
 section = st.sidebar.selectbox(
